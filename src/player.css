@@ -1,0 +1,33 @@
+.map {
+    width: 735px;
+    height: 735px;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    border: 2px solid black;
+}
+
+
+html, body, #root {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+}
+
+#root {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.player {
+    width: 35px;
+    height: 35px;
+    background-color: #535bf2;
+    border: 1px solid black;
+    aspect-ratio: 1;
+    position: absolute;
+}
