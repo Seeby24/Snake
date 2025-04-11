@@ -30,4 +30,66 @@ html, body, #root {
     border: 1px solid black;
     aspect-ratio: 1;
     position: absolute;
+
+    box-shadow:
+            1px 1px 0 #3f49c9,
+            2px 2px 0 #3f49c9,
+            3px 3px 0 #3f49c9,
+            -1px 1px 0 #3f49c9,
+            -2px 2px 0 #3f49c9,
+            -3px 3px 0 #3f49c9;
 }
+
+/* Augen */
+.player::before,
+.player::after {
+    content: "";
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: white;
+    border-radius: 50%;
+    top: 8px;
+}
+
+/* Linkes Auge */
+.player::before {
+    left: 8px;
+}
+
+/* Rechtes Auge */
+.player::after {
+    right: 8px;
+}
+
+
+.apple {
+    width: 35px;
+    height: 35px;
+    position: absolute;
+    /* Einfacher roter Körper */
+    background: #FF0000;
+    /* Dunkelrote Pixel für Schattierung */
+    box-shadow:
+        /* Rechte Schatten-Pixel */
+            1px 1px 0 #990000,
+            2px 2px 0 #990000,
+            3px 3px 0 #990000,
+                /* Linke Schatten-Pixel */
+            -1px 1px 0 #990000,
+            -2px 2px 0 #990000,
+            -3px 3px 0 #990000;
+}
+
+/* Minimalistischer Stiel (3x5 Pixel) */
+.apple::before {
+    content: "";
+    position: absolute;
+    top: -5px;
+    left: 16px; /* Zentriert (35px/2 - 3px/2) */
+    width: 3px;
+    height: 5px;
+    background: #5C3317; /* Holzfarbe */
+}
+
+

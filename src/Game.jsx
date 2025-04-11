@@ -1,11 +1,16 @@
-import { useState, useEffect, useCallback } from "react";
+import {useState, useEffect, useCallback} from "react";
 import Player from "./Player.jsx";
 import "./player.css";
+import Apple from "./Apple.jsx";
 
 export default function Game() {
-    const [position, setPosition] = useState({ x: 0, y: 0 });
+    const [position, setPosition] = useState({x: 0, y: 0});
     const [direction, setDirection] = useState(null);
     const [dead, setDead] = useState(false);
+    const [positionApple, setPositionApple] = useState({
+        x: 0,
+        y: 0
+    });
 
     useEffect(() => {
         if (!direction || dead) return;
@@ -13,7 +18,7 @@ export default function Game() {
         const interval = setInterval(() => {
             setPosition(prevPos => {
                 const step = 35;
-                let newPosition = { ...prevPos };
+                let newPosition = {...prevPos};
 
                 switch (direction) {
                     case 'up':
@@ -51,7 +56,6 @@ export default function Game() {
     }, [direction, dead]);
 
 
-
     const handleKeyPress = useCallback((event) => {
         if (dead) return;
 
@@ -77,7 +81,7 @@ export default function Game() {
     useEffect(() => {
         if (dead) {
             const timer = setTimeout(() => {
-                setPosition({ x: 0, y: 0 });
+                setPosition({x: 70, y: 70});
                 setDead(false);
             }, 100);
             return () => clearTimeout(timer);
@@ -90,9 +94,16 @@ export default function Game() {
         return () => window.removeEventListener("keydown", handleKeyPress);
     }, [handleKeyPress]);
 
-    return (
-        <div className="map">
-            <Player position={position} dead={dead} />
-        </div>
-    );
+
+    if (position.x === positionApple & position.y === positionApple.y){
+        setPositionApple(Math.floor(Math.random() * 21) * 35; )
+    }
+
+
+        return (
+            <div className="map">
+                <Player position={position} dead={dead}/>
+                <Apple positionApple={positionApple}/>
+            </div>
+        );
 }
