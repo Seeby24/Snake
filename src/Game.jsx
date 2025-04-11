@@ -1,83 +1,98 @@
-import {useState, useEffect} from "react";
+import { useState, useEffect, useCallback } from "react";
 import Player from "./Player.jsx";
 import "./player.css";
 
 export default function Game() {
-    const [position, setPosition] = useState({x: 0, y: 0});
-    const [key, setKey] = useState("x")
+    const [position, setPosition] = useState({ x: 0, y: 0 });
+    const [direction, setDirection] = useState(null);
+    const [dead, setDead] = useState(false);
 
-    let [dead, setDead] = useState(false)
+    useEffect(() => {
+        if (!direction || dead) return;
 
-    const handleKeyPress = (event) => {
-        const step = 35;
-        let newPosition = {...position};
+        const interval = setInterval(() => {
+            setPosition(prevPos => {
+                const step = 35;
+                let newPosition = { ...prevPos };
+
+                switch (direction) {
+                    case 'up':
+                        newPosition.y -= step;
+                        break;
+                    case 'left':
+                        newPosition.x -= step;
+                        break;
+                    case 'down':
+                        newPosition.y += step;
+                        break;
+                    case 'right':
+                        newPosition.x += step;
+                        break;
+                    default:
+                        break;
+                }
+
+
+                if (
+                    newPosition.x >= 735 ||
+                    newPosition.x <= -35 ||
+                    newPosition.y <= -35 ||
+                    newPosition.y >= 735
+                ) {
+                    setDead(true);
+                    return prevPos;
+                }
+
+                return newPosition;
+            });
+        }, 150);
+
+        return () => clearInterval(interval);
+    }, [direction, dead]);
+
+
+
+    const handleKeyPress = useCallback((event) => {
+        if (dead) return;
 
         switch (event.key) {
             case 'w':
-                newPosition.y -= step;
-                setKey("y")
+                setDirection('up');
                 break;
             case 'a':
-                newPosition.x -= step;
-                setKey("-x")
+                setDirection('left');
                 break;
             case 's':
-                newPosition.y += step;
-                setKey("-y")
+                setDirection('down');
                 break;
             case 'd':
-                newPosition.x += step;
-                setKey("x")
+                setDirection('right');
                 break;
             default:
                 break;
         }
-        if (newPosition.x >= 735 || newPosition.x <= -35 || newPosition.y <= -35 || newPosition.y >= 735) {
-            setDead(true);
-            return;
-        }
-
-        while (dead) {
-            if (key === "x") {
-                newPosition.x += 35;
-                setTimeout(1000)
-            }
-            if (key === "-x") {
-                newPosition.x -= 35;
-                setTimeout(1000)
-            }
-            if (key === "y") {
-                newPosition.y += 35;
-                setTimeout(1000)
-            }
-            if (key === "-y") {
-                newPosition.x -= 35;
-                setTimeout(1000)
-            }
+    }, [dead]);
 
 
-            setPosition(newPosition);
-        }
-        ;
-
-        useEffect(() => {
-            if (dead) {
-                setPosition({x: 0, y: 0});
+    useEffect(() => {
+        if (dead) {
+            const timer = setTimeout(() => {
+                setPosition({ x: 0, y: 0 });
                 setDead(false);
-            }
-        }, [dead]);
+            }, 100);
+            return () => clearTimeout(timer);
+        }
+    }, [dead]);
 
 
-        useEffect(() => {
-            window.addEventListener("keydown", handleKeyPress);
-            return () => window.removeEventListener("keydown", handleKeyPress);
-        }, [position]);
+    useEffect(() => {
+        window.addEventListener("keydown", handleKeyPress);
+        return () => window.removeEventListener("keydown", handleKeyPress);
+    }, [handleKeyPress]);
 
-
-        return (
-            <div className="map">
-                <Player position={position}/>
-            </div>
-        );
-    }
+    return (
+        <div className="map">
+            <Player position={position} dead={dead} />
+        </div>
+    );
 }
