@@ -40,6 +40,23 @@ html, body, #root {
             -3px 3px 0 #3f49c9;
 }
 
+.bodys {
+    width: 35px;
+    height: 35px;
+    background-color: #535bf2;
+    border: 1px solid black;
+    aspect-ratio: 1;
+    position: absolute;
+
+    box-shadow:
+            1px 1px 0 #3f49c9,
+            2px 2px 0 #3f49c9,
+            3px 3px 0 #3f49c9,
+            -1px 1px 0 #3f49c9,
+            -2px 2px 0 #3f49c9,
+            -3px 3px 0 #3f49c9;
+}
+
 /* Augen */
 .player::before,
 .player::after {

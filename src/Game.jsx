@@ -3,14 +3,17 @@ import Player from "./Player.jsx";
 import "./player.css";
 import Apple from "./Apple.jsx";
 
+
 export default function Game() {
     const [position, setPosition] = useState({x: 0, y: 0});
     const [direction, setDirection] = useState(null);
     const [dead, setDead] = useState(false);
+    const [points, setPoints] = useState(0)
     const [positionApple, setPositionApple] = useState({
-        x: 0,
-        y: 0
+        x: 70,
+        y: 140
     });
+
 
     useEffect(() => {
         if (!direction || dead) return;
@@ -50,7 +53,7 @@ export default function Game() {
 
                 return newPosition;
             });
-        }, 150);
+        }, 100);
 
         return () => clearInterval(interval);
     }, [direction, dead]);
@@ -83,6 +86,7 @@ export default function Game() {
             const timer = setTimeout(() => {
                 setPosition({x: 70, y: 70});
                 setDead(false);
+                setPoints(0)
             }, 100);
             return () => clearTimeout(timer);
         }
@@ -95,15 +99,27 @@ export default function Game() {
     }, [handleKeyPress]);
 
 
-    if (position.x === positionApple & position.y === positionApple.y){
-        setPositionApple(Math.floor(Math.random() * 21) * 35; )
-    }
+    useEffect(() => {
+        if (position.x === positionApple.x && position.y === positionApple.y) {
+            const randomX = Math.floor(Math.random() * 21) * 35;
+            const randomY = Math.floor(Math.random() * 21) * 35;
+            setPositionApple({x: randomX, y: randomY});
+
+            setPoints(prev => prev + 1);
+        }
+    }, [position, positionApple]);
 
 
-        return (
+
+    return (
+        <>
+            <h1>Snake Game</h1>
+
+            <h2>Punkte:{points}</h2>
             <div className="map">
                 <Player position={position} dead={dead}/>
                 <Apple positionApple={positionApple}/>
             </div>
-        );
+        </>
+    );
 }
