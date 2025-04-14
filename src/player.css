@@ -21,92 +21,83 @@ html, body, #root {
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-.player {
-    width: 35px;
-    height: 35px;
-    background-color: #535bf2;
-    border: 1px solid black;
-    aspect-ratio: 1;
-    position: absolute;
-
-    box-shadow:
-            1px 1px 0 #3f49c9,
-            2px 2px 0 #3f49c9,
-            3px 3px 0 #3f49c9,
-            -1px 1px 0 #3f49c9,
-            -2px 2px 0 #3f49c9,
-            -3px 3px 0 #3f49c9;
-}
-
-.bodys {
-    width: 35px;
-    height: 35px;
-    background-color: #535bf2;
-    border: 1px solid black;
-    aspect-ratio: 1;
-    position: absolute;
-
-    box-shadow:
-            1px 1px 0 #3f49c9,
-            2px 2px 0 #3f49c9,
-            3px 3px 0 #3f49c9,
-            -1px 1px 0 #3f49c9,
-            -2px 2px 0 #3f49c9,
-            -3px 3px 0 #3f49c9;
-}
-
-/* Augen */
-.player::before,
-.player::after {
-    content: "";
-    position: absolute;
-    width: 4px;
-    height: 4px;
-    background: white;
-    border-radius: 50%;
-    top: 8px;
-}
+}.player {
+     width: 30px;
+     height: 30px;
+     background-color: green;
+     border-radius: 20% 20% 40% 40%;
+     position: absolute;
+     box-shadow: inset -1px -1px 2px rgba(0, 0, 0, 0.3);
+ }
 
 /* Linkes Auge */
-.player::before {
-    left: 8px;
+.player .eye-left {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    width: 6px;
+    height: 6px;
+    background-color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 /* Rechtes Auge */
-.player::after {
-    right: 8px;
+.player .eye-right {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 6px;
+    height: 6px;
+    background-color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
+
+/* Pupillen */
+.player .pupil {
+    width: 3px;
+    height: 3px;
+    background-color: black;
+    border-radius: 50%;
+}
+
+
 
 
 .apple {
-    width: 35px;
-    height: 35px;
+    width: 30px;
+    height: 30px;
+    background: radial-gradient(circle at 40% 40%, #e00, #a00);
+    border-radius: 50% 50% 45% 45% / 50% 50% 55% 55%;
     position: absolute;
-    /* Einfacher roter Körper */
-    background: #FF0000;
-    /* Dunkelrote Pixel für Schattierung */
-    box-shadow:
-        /* Rechte Schatten-Pixel */
-            1px 1px 0 #990000,
-            2px 2px 0 #990000,
-            3px 3px 0 #990000,
-                /* Linke Schatten-Pixel */
-            -1px 1px 0 #990000,
-            -2px 2px 0 #990000,
-            -3px 3px 0 #990000;
+    box-shadow: inset -2px -2px 4px rgba(0, 0, 0, 0.3);
 }
 
-/* Minimalistischer Stiel (3x5 Pixel) */
+/* Optionales Blatt oben */
 .apple::before {
     content: "";
     position: absolute;
     top: -5px;
-    left: 16px; /* Zentriert (35px/2 - 3px/2) */
-    width: 3px;
+    left: 10px;
+    width: 8px;
     height: 5px;
-    background: #5C3317; /* Holzfarbe */
+    background: green;
+    border-radius: 50%;
+    transform: rotate(-30deg);
 }
 
 
+.bodys {
+    width: 30px;
+    height: 30px;
+    background-color: #228B22; /* sattes Grün */
+    border-radius: 25%;
+    position: absolute;
+    box-shadow: inset -1px -1px 2px rgba(0, 0, 0, 0.2);
+    border: 1px solid #145214;
+}

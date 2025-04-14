@@ -9,6 +9,13 @@ export default function Player({ position }) {
                 top: `${position.y}px`,
                 position: 'absolute'
             }}
-        ></div>
+        >
+            <div className="eye-left">
+                <div className="pupil"></div>
+            </div>
+            <div className="eye-right">
+                <div className="pupil"></div>
+            </div>
+        </div>
     );
 }

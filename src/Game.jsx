@@ -2,6 +2,8 @@ import {useState, useEffect, useCallback} from "react";
 import Player from "./Player.jsx";
 import "./player.css";
 import Apple from "./Apple.jsx";
+import Bodys from "./bodys.jsx";
+import Body from "./body.jsx";
 
 
 export default function Game() {
@@ -53,7 +55,7 @@ export default function Game() {
 
                 return newPosition;
             });
-        }, 100);
+        }, 120);
 
         return () => clearInterval(interval);
     }, [direction, dead]);
@@ -104,8 +106,8 @@ export default function Game() {
             const randomX = Math.floor(Math.random() * 21) * 35;
             const randomY = Math.floor(Math.random() * 21) * 35;
             setPositionApple({x: randomX, y: randomY});
-
             setPoints(prev => prev + 1);
+
         }
     }, [position, positionApple]);
 
@@ -119,6 +121,7 @@ export default function Game() {
             <div className="map">
                 <Player position={position} dead={dead}/>
                 <Apple positionApple={positionApple}/>
+                <Bodys/>
             </div>
         </>
     );
