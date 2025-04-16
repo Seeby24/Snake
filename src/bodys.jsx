@@ -1,19 +1,18 @@
-import { useState, useEffect } from "react";
+// Bodys.jsx
+import "./player.css";
 
-export default function Bodys({ index,positionApple,positionPlayer}) {
-    const [positionBody, setPositionBody] = useState({
-        x: 0,
-        y: 0,
-    });
-
-
+export default function Bodys({ position }) {
     return (
         <div
             className="bodys"
             style={{
-                left: `${positionBody.x}px`,
-                top: `${positionBody.y}px`,
+                left: `${position.x}px`,
+                top: `${position.y}px`,
                 position: "absolute",
+                width: "35px",
+                height: "35px",
+                backgroundColor: "#535bf2",
+                border: "1px solid black",
             }}
         ></div>
     );

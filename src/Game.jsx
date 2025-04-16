@@ -1,20 +1,16 @@
-import {useState, useEffect, useCallback} from "react";
+import { useState, useEffect, useCallback } from "react";
 import Player from "./Player.jsx";
-import "./player.css";
 import Apple from "./Apple.jsx";
-import Bodys from "./bodys.jsx";
-import Body from "./body.jsx";
-
+import "./player.css";
 
 export default function Game() {
-    const [position, setPosition] = useState({x: 0, y: 0});
+    const [position, setPosition] = useState({ x: 0, y: 0 });
     const [direction, setDirection] = useState(null);
     const [dead, setDead] = useState(false);
-    const [points, setPoints] = useState(0)
-    const [positionApple, setPositionApple] = useState({
-        x: 70,
-        y: 140
-    });
+    const [points, setPoints] = useState(0);
+    const [snakeLength, setSnakeLength] = useState(1);
+    const [bodyParts, setBodyParts] = useState([]);
+    const [positionApple, setPositionApple] = useState({ x: 70, y: 140 });
 
 
     useEffect(() => {
@@ -23,77 +19,66 @@ export default function Game() {
         const interval = setInterval(() => {
             setPosition(prevPos => {
                 const step = 35;
-                let newPosition = {...prevPos};
+                let newPosition = { ...prevPos };
 
                 switch (direction) {
-                    case 'up':
+                    case "up":
                         newPosition.y -= step;
                         break;
-                    case 'left':
-                        newPosition.x -= step;
-                        break;
-                    case 'down':
+                    case "down":
                         newPosition.y += step;
                         break;
-                    case 'right':
-                        newPosition.x += step;
+                    case "left":
+                        newPosition.x -= step;
                         break;
-                    default:
+                    case "right":
+                        newPosition.x += step;
                         break;
                 }
 
 
                 if (
-                    newPosition.x >= 735 ||
-                    newPosition.x <= -35 ||
-                    newPosition.y <= -35 ||
-                    newPosition.y >= 735
+                    newPosition.x < 0 || newPosition.x >= 595 ||
+                    newPosition.y < 0 || newPosition.y >= 595
                 ) {
                     setDead(true);
                     return prevPos;
                 }
+
+                setBodyParts(prev => {
+                    const updated = [prevPos, ...prev];
+                    if (updated.length >= snakeLength) {
+                        updated.pop(); // Nur entfernen, wenn die Länge überschritten wird
+                    }
+                    return updated;
+                });
 
                 return newPosition;
             });
         }, 120);
 
         return () => clearInterval(interval);
-    }, [direction, dead]);
+    }, [direction, dead, snakeLength]);
 
-
+    // Tastatursteuerung
     const handleKeyPress = useCallback((event) => {
         if (dead) return;
 
         switch (event.key) {
-            case 'w':
-                setDirection('up');
+            case "w":
+                setDirection("up");
                 break;
-            case 'a':
-                setDirection('left');
+            case "a":
+                setDirection("left");
                 break;
-            case 's':
-                setDirection('down');
+            case "s":
+                setDirection("down");
                 break;
-            case 'd':
-                setDirection('right');
-                break;
-            default:
+            case "d":
+                setDirection("right");
                 break;
         }
     }, [dead]);
-
-
-    useEffect(() => {
-        if (dead) {
-            const timer = setTimeout(() => {
-                setPosition({x: 70, y: 70});
-                setDead(false);
-                setPoints(0)
-            }, 100);
-            return () => clearTimeout(timer);
-        }
-    }, [dead]);
-
 
     useEffect(() => {
         window.addEventListener("keydown", handleKeyPress);
@@ -103,25 +88,49 @@ export default function Game() {
 
     useEffect(() => {
         if (position.x === positionApple.x && position.y === positionApple.y) {
-            const randomX = Math.floor(Math.random() * 21) * 35;
-            const randomY = Math.floor(Math.random() * 21) * 35;
-            setPositionApple({x: randomX, y: randomY});
+            const randomX = Math.floor(Math.random() * 17) * 35;
+            const randomY = Math.floor(Math.random() * 17) * 35;
+            setPositionApple({ x: randomX, y: randomY });
             setPoints(prev => prev + 1);
-
+            setSnakeLength(prev => prev + 2);
+            console.log(bodyParts.length)
+           // console.log(snakeLength)// Korrekte Erhöhung der Länge
         }
-    }, [position, positionApple]);
+    }, [position, positionApple]    );
 
 
+    useEffect(() => {
+        if (dead) {
+            const timer = setTimeout(() => {
+                setPosition({ x: 0, y: 0 });
+                setDirection(null);
+                setPoints(0);
+                setSnakeLength(1); // Zurücksetzen auf 1
+                setBodyParts([]);
+                setDead(false);
+            }, 1000);
+            return () => clearTimeout(timer);
+        }
+    }, [dead]);
 
     return (
         <>
             <h1>Snake Game</h1>
-
-            <h2>Punkte:{points}</h2>
+            <h2>Punkte: {points}</h2>
             <div className="map">
-                <Player position={position} dead={dead}/>
-                <Apple positionApple={positionApple}/>
-                <Bodys/>
+                <Player position={position} dead={dead} />
+                <Apple positionApple={positionApple} />
+                {bodyParts.map((part, index) => (
+                    <div
+                        key={index}
+                        className="bodys"
+                        style={{
+                            left: `${part.x}px`,
+                            top: `${part.y}px`,
+                            position: "absolute"
+                        }}
+                    ></div>
+                ))}
             </div>
         </>
     );
