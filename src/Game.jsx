@@ -1,16 +1,16 @@
-import { useState, useEffect, useCallback } from "react";
+import {useState, useEffect, useCallback} from "react";
 import Player from "./Player.jsx";
 import Apple from "./Apple.jsx";
 import "./player.css";
 
 export default function Game() {
-    const [position, setPosition] = useState({ x: 0, y: 0 });
+    const [position, setPosition] = useState({x: 0, y: 0});
     const [direction, setDirection] = useState(null);
     const [dead, setDead] = useState(false);
     const [points, setPoints] = useState(0);
     const [snakeLength, setSnakeLength] = useState(1);
     const [bodyParts, setBodyParts] = useState([]);
-    const [positionApple, setPositionApple] = useState({ x: 70, y: 140 });
+    const [positionApple, setPositionApple] = useState({x: 70, y: 140});
 
 
     useEffect(() => {
@@ -19,7 +19,7 @@ export default function Game() {
         const interval = setInterval(() => {
             setPosition(prevPos => {
                 const step = 35;
-                let newPosition = { ...prevPos };
+                let newPosition = {...prevPos};
 
                 switch (direction) {
                     case "up":
@@ -40,7 +40,14 @@ export default function Game() {
                 if (
                     newPosition.x < 0 || newPosition.x >= 595 ||
                     newPosition.y < 0 || newPosition.y >= 595
+
+
                 ) {
+                    setDead(true);
+                    return prevPos;
+                }
+
+                if (bodyParts.some(part => part.x === newPosition.x && part.y === newPosition.y)) {
                     setDead(true);
                     return prevPos;
                 }
@@ -90,19 +97,20 @@ export default function Game() {
         if (position.x === positionApple.x && position.y === positionApple.y) {
             const randomX = Math.floor(Math.random() * 17) * 35;
             const randomY = Math.floor(Math.random() * 17) * 35;
-            setPositionApple({ x: randomX, y: randomY });
+            setBodyParts(prev => [position, ...prev]);
+            setPositionApple({x: randomX, y: randomY});
             setPoints(prev => prev + 1);
             setSnakeLength(prev => prev + 2);
             console.log(bodyParts.length)
-           // console.log(snakeLength)// Korrekte Erhöhung der Länge
+            // console.log(snakeLength)// Korrekte Erhöhung der Länge
         }
-    }, [position, positionApple]    );
+    }, [position, positionApple]);
 
 
     useEffect(() => {
         if (dead) {
             const timer = setTimeout(() => {
-                setPosition({ x: 0, y: 0 });
+                setPosition({x: 0, y: 0});
                 setDirection(null);
                 setPoints(0);
                 setSnakeLength(1); // Zurücksetzen auf 1
@@ -113,13 +121,14 @@ export default function Game() {
         }
     }, [dead]);
 
+
     return (
         <>
             <h1>Snake Game</h1>
             <h2>Punkte: {points}</h2>
             <div className="map">
-                <Player position={position} dead={dead} />
-                <Apple positionApple={positionApple} />
+                <Player position={position} dead={dead}/>
+                <Apple positionApple={positionApple}/>
                 {bodyParts.map((part, index) => (
                     <div
                         key={index}
