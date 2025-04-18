@@ -1,3 +1,32 @@
+html, body, #root {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+}
+
+#root {
+    display: flex;
+    flex-direction: column;  /* Wichtig: Elemente untereinander statt nebeneinander */
+    align-items: center;
+    padding-top: 20px;       /* Abstand vom oberen Rand */
+    box-sizing: border-box;
+}
+
+.game-header {
+    text-align: center;
+    margin-bottom: 20px;     /* Abstand zwischen Score und Map */
+}
+
+.game-header h2 {
+    display: inline-block;
+    margin-right: 20px;
+}
+
+.game-header h2:last-child {
+    margin-right: 0;
+}
+
 .map {
     width: 595px;
     height: 595px;
@@ -17,29 +46,15 @@
             -35px 0px;
 }
 
-
-
-html, body, #root {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    width: 100%;
+.player {
+    width: 30px;
+    height: 30px;
+    background-color: green;
+    border-radius: 20% 20% 40% 40%;
+    position: absolute;
+    box-shadow: inset -1px -1px 2px rgba(0, 0, 0, 0.3);
 }
 
-#root {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}.player {
-     width: 30px;
-     height: 30px;
-     background-color: green;
-     border-radius: 20% 20% 40% 40%;
-     position: absolute;
-     box-shadow: inset -1px -1px 2px rgba(0, 0, 0, 0.3);
- }
-
-/* Linkes Auge */
 .player .eye-left {
     position: absolute;
     top: 6px;
@@ -53,7 +68,6 @@ html, body, #root {
     align-items: center;
 }
 
-/* Rechtes Auge */
 .player .eye-right {
     position: absolute;
     top: 6px;
@@ -67,16 +81,12 @@ html, body, #root {
     align-items: center;
 }
 
-/* Pupillen */
 .player .pupil {
     width: 3px;
     height: 3px;
     background-color: black;
     border-radius: 50%;
 }
-
-
-
 
 .apple {
     width: 30px;
@@ -87,7 +97,6 @@ html, body, #root {
     box-shadow: inset -2px -2px 4px rgba(0, 0, 0, 0.3);
 }
 
-/* Optionales Blatt oben */
 .apple::before {
     content: "";
     position: absolute;
@@ -99,7 +108,6 @@ html, body, #root {
     border-radius: 50%;
     transform: rotate(-30deg);
 }
-
 
 .bodys {
     width: 30px;

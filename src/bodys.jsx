@@ -11,7 +11,6 @@ export default function Bodys({ position }) {
                 position: "absolute",
                 width: "35px",
                 height: "35px",
-                backgroundColor: "#535bf2",
                 border: "1px solid black",
             }}
         ></div>

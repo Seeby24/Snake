@@ -1,4 +1,4 @@
-import {useState, useEffect, useCallback} from "react";
+import { useState, useEffect, useCallback } from "react";
 import Player from "./Player.jsx";
 import Apple from "./Apple.jsx";
 import "./player.css";
@@ -8,9 +8,53 @@ export default function Game() {
     const [direction, setDirection] = useState(null);
     const [dead, setDead] = useState(false);
     const [points, setPoints] = useState(0);
+    const [Highscore,setHighscore] = useState(0)
     const [snakeLength, setSnakeLength] = useState(1);
     const [bodyParts, setBodyParts] = useState([]);
     const [positionApple, setPositionApple] = useState({x: 70, y: 140});
+
+
+    const step = 35;
+
+    function Movement(position, direction) {
+        const newPosition = {...position};
+
+        switch (direction) {
+            case "up":
+                newPosition.y -= step;
+                break;
+            case "down":
+                newPosition.y += step;
+                break;
+            case "left":
+                newPosition.x -= step;
+                break;
+            case "right":
+                newPosition.x += step;
+                break;
+        }
+
+        return newPosition;
+    }
+
+    function CheckWall(position) {
+        return (
+            position.x < 0 || position.x >= 595 ||
+            position.y < 0 || position.y >= 595
+        );
+    }
+
+    function CreateNewBodyParts(prevPos, bodyParts, snakeLength) {
+        const newBody = [prevPos, ...bodyParts];
+        if (newBody.length >= snakeLength) {
+            newBody.pop();
+        }
+        return newBody;
+    }
+
+    function CheckCollisionWithYourself(position, bodyParts) {
+        return bodyParts.some(part => part.x === position.x && part.y === position.y);
+    }
 
 
     useEffect(() => {
@@ -18,56 +62,29 @@ export default function Game() {
 
         const interval = setInterval(() => {
             setPosition(prevPos => {
-                const step = 35;
-                let newPosition = {...prevPos};
+                const newPosition = Movement(prevPos, direction);
 
-                switch (direction) {
-                    case "up":
-                        newPosition.y -= step;
-                        break;
-                    case "down":
-                        newPosition.y += step;
-                        break;
-                    case "left":
-                        newPosition.x -= step;
-                        break;
-                    case "right":
-                        newPosition.x += step;
-                        break;
-                }
-
-
-                if (
-                    newPosition.x < 0 || newPosition.x >= 595 ||
-                    newPosition.y < 0 || newPosition.y >= 595
-
-
-                ) {
+                if (CheckWall(newPosition)) {
                     setDead(true);
                     return prevPos;
                 }
 
-                if (bodyParts.some(part => part.x === newPosition.x && part.y === newPosition.y)) {
+                const newBodyParts = CreateNewBodyParts(prevPos, bodyParts, snakeLength);
+
+                if (CheckCollisionWithYourself(newPosition, newBodyParts)) {
                     setDead(true);
                     return prevPos;
                 }
 
-                setBodyParts(prev => {
-                    const updated = [prevPos, ...prev];
-                    if (updated.length >= snakeLength) {
-                        updated.pop(); // Nur entfernen, wenn die Länge überschritten wird
-                    }
-                    return updated;
-                });
-
+                setBodyParts(newBodyParts);
                 return newPosition;
             });
         }, 120);
 
         return () => clearInterval(interval);
-    }, [direction, dead, snakeLength]);
+    }, [direction, dead, bodyParts, snakeLength]);
 
-    // Tastatursteuerung
+    //Steuerung
     const handleKeyPress = useCallback((event) => {
         if (dead) return;
 
@@ -92,28 +109,25 @@ export default function Game() {
         return () => window.removeEventListener("keydown", handleKeyPress);
     }, [handleKeyPress]);
 
-
+    // Eat Apple
     useEffect(() => {
         if (position.x === positionApple.x && position.y === positionApple.y) {
             const randomX = Math.floor(Math.random() * 17) * 35;
             const randomY = Math.floor(Math.random() * 17) * 35;
-            setBodyParts(prev => [position, ...prev]);
             setPositionApple({x: randomX, y: randomY});
             setPoints(prev => prev + 1);
-            setSnakeLength(prev => prev + 2);
-            console.log(bodyParts.length)
-            // console.log(snakeLength)// Korrekte Erhöhung der Länge
+            setSnakeLength(prev => prev + 1);
         }
     }, [position, positionApple]);
 
-
+    // Dead
     useEffect(() => {
         if (dead) {
             const timer = setTimeout(() => {
                 setPosition({x: 0, y: 0});
                 setDirection(null);
                 setPoints(0);
-                setSnakeLength(1); // Zurücksetzen auf 1
+                setSnakeLength(1);
                 setBodyParts([]);
                 setDead(false);
             }, 1000);
@@ -121,11 +135,20 @@ export default function Game() {
         }
     }, [dead]);
 
+    //set Highscore
+    useEffect(() => {
+        if(points>Highscore){
+            setHighscore(points)
+        }
+    }, [points,Highscore]);
 
     return (
         <>
-            <h1>Snake Game</h1>
-            <h2>Punkte: {points}</h2>
+            <div className="game-header">
+                <h1>Snake Game</h1>
+                <h2>Punkte: {points}</h2>
+                <h2>HIghscore: {Highscore}</h2>
+            </div>
             <div className="map">
                 <Player position={position} dead={dead}/>
                 <Apple positionApple={positionApple}/>
